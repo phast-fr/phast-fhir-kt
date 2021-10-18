@@ -40,6 +40,8 @@ import java.util.*
 class RestClient(
     baseUri: String) {
 
+    var log = false
+
     var tokenType: String? = null
 
     var credential: String? = null
@@ -360,8 +362,10 @@ class RestClient(
         .baseUrl(baseUri)
         .defaultHeader(HttpHeaders.CONTENT_TYPE, "application/fhir+json")
         .filters {
-            it.add(logRequest())
-            it.add(logResponse())
+            if (log) {
+                it.add(logRequest())
+                it.add(logResponse())
+            }
         }
         .build()
 
@@ -438,7 +442,8 @@ class RestClient(
                     logger.info("Body is {}", body)
                     Mono.just(response)
                 }
-        } else {
+        }
+        else {
             Mono.just(response)
         }
     }
