@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val ossrhUsername = ""
-val ossrhPassword = ""
+val ossrhUsername: String by project
+val ossrhPassword: String by project
 
 plugins {
     kotlin("jvm") version "1.5.31"
@@ -10,7 +10,7 @@ plugins {
     id("signing")
 }
 
-group = "com.phast"
+group = "fr.phast"
 version = "0.0.1-SNAPSHOT"
 java.sourceCompatibility = JavaVersion.VERSION_11
 
@@ -67,15 +67,13 @@ publishing {
                 url.set("https://github.com/phast-fr/phast-fhir-kt")
                 licenses {
                     license {
-                        //name.set("The Apache License, Version 2.0")
-                        //url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
                         name.set("MIT License")
                         url.set("https://www.opensource.org/licenses/mit-license.php")
                     }
                 }
                 developers {
                     developer {
-                        id.set("TODO")
+                        id.set("davidouagne")
                         name.set("David Ouagne")
                         email.set("david.ouagne@phast.fr")
                         organization.set("Phast")
@@ -91,18 +89,20 @@ publishing {
     }
     repositories {
         maven {
-            val releasesRepoUrl = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
-            val snapshotsRepoUrl = uri("https://oss.sonatype.org/content/repositories/snapshots")
+            val releasesRepoUrl = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
+            val snapshotsRepoUrl = uri("https://s01.oss.sonatype.org/content/repositories/snapshots")
             url = if (version.toString().endsWith("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl
-            credentials {
-                username = ossrhUsername
-                password = ossrhPassword
+            credentials(HttpHeaderCredentials::class) {
+                name = ossrhUsername
+                value = ossrhPassword
+            }
+            authentication {
+                create<HttpHeaderAuthentication>("header")
             }
         }
     }
 }
 
 signing {
-    useGpgCmd()
     sign(publishing.publications["mavenJava"])
 }
