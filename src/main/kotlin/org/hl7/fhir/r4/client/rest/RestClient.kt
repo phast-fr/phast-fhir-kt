@@ -200,11 +200,25 @@ class RestClient(
                     .queryParamIfPresent("version", Optional.ofNullable(resourceVersion))
                     .queryParamIfPresent("subject", Optional.ofNullable(subject))
                     .queryParamIfPresent("code", Optional.ofNullable(
-                        codes?.joinToString(",") { code -> "${code.system}|${code.code}" })
+                        codes?.joinToString(",") { code ->
+                            if (code.system != null) {
+                                "${code.system?.value}|${code.code?.value}"
+                            }
+                            else {
+                                "${code.code?.value}"
+                            }
+                        })
                     )
                     .queryParamIfPresent("code:in", Optional.ofNullable(valueSet))
                     .queryParamIfPresent("medication.code", Optional.ofNullable(
-                        medicationCodes?.joinToString(",") { code -> "${code.system}|${code.code}" })
+                        medicationCodes?.joinToString(",") { code ->
+                            if (code.system != null) {
+                                "${code.system?.value}|${code.code?.value}"
+                            }
+                            else {
+                                "${code.code?.value}"
+                            }
+                        })
                     )
                     .build()
                 }
