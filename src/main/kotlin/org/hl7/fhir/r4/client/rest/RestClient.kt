@@ -25,12 +25,13 @@
 package org.hl7.fhir.r4.client.rest
 
 import org.hl7.fhir.r4.client.rest.exception.RestException
-import org.hl7.fhir.r4.model.Bundle
-import org.hl7.fhir.r4.model.Coding
+import org.hl7.fhir.r4.model.*
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
+import org.springframework.util.LinkedMultiValueMap
+import org.springframework.web.reactive.function.BodyInserters
 import org.springframework.web.reactive.function.client.*
 import reactor.core.publisher.Mono
 import reactor.util.retry.Retry
@@ -192,7 +193,59 @@ class RestClient(
         }
 
         override fun execute(): Mono<ResponseEntity<Bundle>> {
+            val formData = LinkedMultiValueMap<String, String>()
+            if (resourceId != null) {
+                formData["_id"] = resourceId!!
+            }
+            if (resourceUrl != null) {
+                formData["url"] = resourceUrl!!
+            }
+            if (resourceName != null) {
+                formData["name"] = resourceName!!
+            }
+            if (resourceVersion != null) {
+                formData["version"] = resourceVersion!!
+            }
+            if (subject != null) {
+                formData["subject"] = subject!!
+            }
+            if (codes != null) {
+                formData["code"] = codes?.joinToString(",") { code ->
+                    if (code.system != null) {
+                        "${code.system?.value}|${code.code?.value}"
+                    }
+                    else {
+                        "${code.code?.value}"
+                    }
+                }
+            }
+            if (valueSet != null) {
+                formData["code:in"] = valueSet
+            }
+            if (medicationCodes != null) {
+                formData["medication.code"] = medicationCodes?.joinToString(",") { code ->
+                    if (code.system != null) {
+                        "${code.system?.value}|${code.code?.value}"
+                    }
+                    else {
+                        "${code.code?.value}"
+                    }
+                }
+            }
+
             val request = client
+                .post()
+                .uri { uriBuilder ->
+                    uriBuilder
+                        .path("/$resourceType/_search")
+                        .build()
+                }
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(
+                    BodyInserters.fromFormData(formData)
+                )
+
+            /*val request = client
                 .get()
                 .uri { uriBuilder -> uriBuilder
                     .path("/$resourceType")
@@ -223,7 +276,7 @@ class RestClient(
                         })
                     )
                     .build()
-                }
+                }*/
             if (tokenType != null && credential != null) {
                 request.header("Authorization", "$tokenType $credential")
             }
