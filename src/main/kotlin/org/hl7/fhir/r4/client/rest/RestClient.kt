@@ -322,6 +322,8 @@ class RestClient(
 
         private var resourceCode: String? = null
 
+        private var resourceUrl: UriType? = null
+
         override fun setTokenType(tokenType: String) {
             this.tokenType = tokenType
         }
@@ -360,6 +362,11 @@ class RestClient(
             return this
         }
 
+        override fun withUrl(url: UriType): IOperation<T> {
+            this.resourceUrl = url
+            return this
+        }
+
         override fun execute(): Mono<ResponseEntity<T>> {
             var uri = ""
             if (resourceType != null) {
@@ -372,6 +379,7 @@ class RestClient(
                 .get()
                 .uri { uriBuilder -> uriBuilder
                     .path(uri)
+                    .queryParamIfPresent("url", Optional.ofNullable(resourceUrl))
                     .queryParamIfPresent("code", Optional.ofNullable(resourceCode))
                     .queryParamIfPresent("system", Optional.ofNullable(resourceSystem))
                     .build()

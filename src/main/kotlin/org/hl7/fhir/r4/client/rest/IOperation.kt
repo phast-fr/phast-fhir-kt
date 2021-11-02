@@ -24,6 +24,7 @@
 
 package org.hl7.fhir.r4.client.rest
 
+import org.hl7.fhir.r4.model.UriType
 import org.springframework.http.ResponseEntity
 import reactor.core.publisher.Mono
 
@@ -42,6 +43,8 @@ interface IOperation<T> {
     fun withCode(resourceCode: String): IOperation<T>
 
     fun withSystem(resourceSystem: String): IOperation<T>
+
+    fun withUrl(url: UriType): IOperation<T>
 
     fun execute(): Mono<ResponseEntity<T>>
 }
