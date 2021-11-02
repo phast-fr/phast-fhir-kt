@@ -13,12 +13,12 @@ class RestClientTest {
     @Test
     fun fhirSearchPost() {
         val mapper = jacksonObjectMapper()
-        val content = RestClient::class.java.classLoader.getResource("valueset acure.json")
+        val content = RestClient::class.java.classLoader.getResource("valueset-acute-diseases.json")
         if (content != null) {
             val codes = mapper.readValue<List<ValueSetContains>>(
                 content.readText()
             )
-            val client = RestClient("https://api.logicahealth.org/Le23/open")
+            val client = RestClient("https://api.logicahealth.org/Le30/open")
             val bundle = client
                 .search()
                 .withResourceType("Condition")
