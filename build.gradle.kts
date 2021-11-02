@@ -11,7 +11,7 @@ plugins {
 }
 
 group = "fr.phast"
-version = "0.0.3-SNAPSHOT"
+version = "0.0.4-SNAPSHOT"
 java.sourceCompatibility = JavaVersion.VERSION_11
 
 repositories {
@@ -23,8 +23,8 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.0")
-    implementation("org.springframework.boot:spring-boot-starter-webflux:2.5.5")
-    testImplementation("org.springframework.boot:spring-boot-starter-test:2.5.5")
+    implementation("org.springframework.boot:spring-boot-starter-webflux:2.5.6")
+    testImplementation("org.springframework.boot:spring-boot-starter-test:2.5.6")
 }
 
 tasks.withType<KotlinCompile> {

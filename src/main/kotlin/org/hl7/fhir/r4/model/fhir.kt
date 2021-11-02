@@ -14386,9 +14386,10 @@ class Expression(
  */
 enum class ExpressionLanguage(
     @JsonValue val text: String) {
-    TEXT_CQL("text-cql"),
-    TEXT_FHIRPATH("text-fhirpath"),
-    APPLICATION_XFHIR_QUERY("application-xfhir-query")
+    TEXT_CQL("text/cql"),
+    TEXT_CQL_ID("text/cql-identifier"),
+    TEXT_FHIRPATH("text/fhirpath"),
+    APPLICATION_XFHIR_QUERY("application/xfhir-query")
 }
 
 
