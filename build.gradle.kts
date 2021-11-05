@@ -11,7 +11,7 @@ plugins {
 }
 
 group = "fr.phast"
-version = "0.0.5-SNAPSHOT"
+version = "0.0.9-SNAPSHOT"
 java.sourceCompatibility = JavaVersion.VERSION_11
 
 repositories {
