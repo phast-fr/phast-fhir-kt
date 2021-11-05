@@ -367,19 +367,27 @@ class RestClient(
             return this
         }
 
+        override fun withUrl(url: CanonicalType): IOperation<T> {
+            this.resourceUrl = UriType(url.value)
+            return this
+        }
+
         override fun execute(): Mono<ResponseEntity<T>> {
             var uri = ""
             if (resourceType != null) {
                 uri += "/$resourceType"
             }
 
-            uri += "/$resourceId/$operationName"
+            if (resourceId != null) {
+                uri += "/$resourceId"
+            }
+            uri += "/$operationName"
 
             val request = client
                 .get()
                 .uri { uriBuilder -> uriBuilder
                     .path(uri)
-                    .queryParamIfPresent("url", Optional.ofNullable(resourceUrl))
+                    .queryParamIfPresent("url", Optional.ofNullable(resourceUrl?.value))
                     .queryParamIfPresent("code", Optional.ofNullable(resourceCode))
                     .queryParamIfPresent("system", Optional.ofNullable(resourceSystem))
                     .build()
