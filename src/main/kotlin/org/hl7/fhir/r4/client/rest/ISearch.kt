@@ -47,6 +47,8 @@ interface ISearch {
 
     fun withSubject(subject: String): ISearch
 
+    fun withPatient(patient: String): ISearch
+
     fun withCodes(codes: Iterable<Coding>): ISearch
 
     fun withValueSet(valueSet: String): ISearch

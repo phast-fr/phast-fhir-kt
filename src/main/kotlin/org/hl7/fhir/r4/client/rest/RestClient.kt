@@ -133,6 +133,8 @@ class RestClient(
 
         private var subject: String? = null
 
+        private var patient: String? = null
+
         private var codes: Iterable<Coding>? = null
 
         private var medicationCodes: Iterable<Coding>? = null
@@ -177,6 +179,11 @@ class RestClient(
             return this
         }
 
+        override fun withPatient(patient: String): ISearch {
+            this.patient = patient
+            return this
+        }
+
         override fun withCodes(codes: Iterable<Coding>): ISearch {
             this.codes = codes
             return this
@@ -208,6 +215,9 @@ class RestClient(
             }
             if (subject != null) {
                 formData["subject"] = subject!!
+            }
+            if (patient != null) {
+                formData["patient"] = patient!!
             }
             if (codes != null) {
                 formData["code"] = codes?.joinToString(",") { code ->
@@ -504,7 +514,7 @@ class RestClient(
     }
 
 
-    private fun logBody(response: ClientResponse): Mono<ClientResponse?>? {
+    private fun logBody(response: ClientResponse): Mono<ClientResponse?> {
         return if (response.statusCode().is4xxClientError || response.statusCode().is5xxServerError) {
             response.bodyToMono(String::class.java)
                 .flatMap { body: String? ->

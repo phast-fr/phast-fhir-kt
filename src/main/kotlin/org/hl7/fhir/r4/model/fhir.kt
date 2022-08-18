@@ -32,7 +32,7 @@ import java.util.*
 
 /**
  * @Author David Ouagne <david.ouagne@phast.fr>
- * @Generated on 11-05-2021 18:31:26
+ * @Generated on 11-05-2021 19:04:50
  */
 
 /**
@@ -10746,6 +10746,7 @@ enum class DaysOfWeek(
  * If the element is present, it must have either a @value, an @id, or extensions
  */
 data class DecimalType(@JsonValue val value: BigDecimal) {
+    constructor(value: Int): this(value.toBigDecimal())
     companion object {
         @JvmStatic
         @JsonCreator
