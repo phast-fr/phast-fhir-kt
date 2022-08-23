@@ -123,7 +123,9 @@ class RestClient(
 
         private var resourceType: String? = null
 
-        private var resourceId: String? = null
+        private val formData = LinkedMultiValueMap<String, String>()
+
+        /*private var resourceId: String? = null
 
         private var resourceUrl: String? = null
 
@@ -139,7 +141,7 @@ class RestClient(
 
         private var medicationCodes: Iterable<Coding>? = null
 
-        private var valueSet: String? = null
+        private var valueSet: String? = null*/
 
         override fun setTokenType(tokenType: String) {
             this.tokenType = tokenType
@@ -150,12 +152,14 @@ class RestClient(
         }
 
         override fun withId(resourceId: String): SearchInternal {
-            this.resourceId = resourceId
+            this.formData["_id"] = resourceId
+            //this.resourceId = resourceId
             return this
         }
 
         override fun withUrl(resourceUrl: String): ISearch {
-            this.resourceUrl = resourceUrl
+            this.formData["url"] = resourceUrl
+            //this.resourceUrl = resourceUrl
             return this
         }
 
@@ -165,84 +169,49 @@ class RestClient(
         }
 
         override fun withName(resourceName: String): SearchInternal {
-            this.resourceName = resourceName
+            this.formData["name"] = resourceName
+            //this.resourceName = resourceName
             return this
         }
 
         override fun withVersion(resourceVersion: String): SearchInternal {
-            this.resourceVersion = resourceVersion
+            this.formData["version"] = resourceVersion
+            //this.resourceVersion = resourceVersion
             return this
         }
 
         override fun withSubject(subject: String): ISearch {
-            this.subject = subject
+            this.formData["subject"] = subject
+            //this.subject = subject
             return this
         }
 
         override fun withPatient(patient: String): ISearch {
-            this.patient = patient
+            this.formData["patient"] = patient
+            //this.patient = patient
             return this
         }
 
-        override fun withCodes(codes: Iterable<Coding>): ISearch {
-            this.codes = codes
+        override fun withCodes(codePath: String, codes: Iterable<Coding>): ISearch {
+            formData[codePath] = codes.joinToString(",") { code ->
+                if (code.system != null) {
+                    "${code.system?.value}|${code.code?.value}"
+                }
+                else {
+                    "${code.code?.value}"
+                }
+            }
+            //this.codes = codes
             return this
         }
 
-        override fun withValueSet(valueSet: String): ISearch {
-            this.valueSet = valueSet
-            return this
-        }
-
-        override fun withMedicationCode(codes: Iterable<Coding>): ISearch {
-            this.medicationCodes = codes
+        override fun withValueSet(codePath: String, valueSet: String): ISearch {
+            formData["$codePath:in"] = valueSet
+            //this.valueSet = valueSet
             return this
         }
 
         override fun execute(): Mono<ResponseEntity<Bundle>> {
-            val formData = LinkedMultiValueMap<String, String>()
-            if (resourceId != null) {
-                formData["_id"] = resourceId!!
-            }
-            if (resourceUrl != null) {
-                formData["url"] = resourceUrl!!
-            }
-            if (resourceName != null) {
-                formData["name"] = resourceName!!
-            }
-            if (resourceVersion != null) {
-                formData["version"] = resourceVersion!!
-            }
-            if (subject != null) {
-                formData["subject"] = subject!!
-            }
-            if (patient != null) {
-                formData["patient"] = patient!!
-            }
-            if (codes != null) {
-                formData["code"] = codes?.joinToString(",") { code ->
-                    if (code.system != null) {
-                        "${code.system?.value}|${code.code?.value}"
-                    }
-                    else {
-                        "${code.code?.value}"
-                    }
-                }
-            }
-            if (valueSet != null) {
-                formData["code:in"] = valueSet
-            }
-            if (medicationCodes != null) {
-                formData["medication.code"] = medicationCodes?.joinToString(",") { code ->
-                    if (code.system != null) {
-                        "${code.system?.value}|${code.code?.value}"
-                    }
-                    else {
-                        "${code.code?.value}"
-                    }
-                }
-            }
-
             val request = client
                 .post()
                 .uri { uriBuilder ->

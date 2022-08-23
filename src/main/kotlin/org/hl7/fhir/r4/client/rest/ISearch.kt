@@ -49,11 +49,9 @@ interface ISearch {
 
     fun withPatient(patient: String): ISearch
 
-    fun withCodes(codes: Iterable<Coding>): ISearch
+    fun withCodes(codePath: String, codes: Iterable<Coding>): ISearch
 
-    fun withValueSet(valueSet: String): ISearch
-
-    fun withMedicationCode(codes: Iterable<Coding>): ISearch
+    fun withValueSet(codePath: String, valueSet: String): ISearch
 
     fun execute(): Mono<ResponseEntity<Bundle>>
 }
