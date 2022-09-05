@@ -53,5 +53,7 @@ interface ISearch {
 
     fun withValueSet(codePath: String, valueSet: String): ISearch
 
+    fun withContext(contextPath: String, context: String): ISearch
+
     fun execute(): Mono<ResponseEntity<Bundle>>
 }

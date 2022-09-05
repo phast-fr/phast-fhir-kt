@@ -125,24 +125,6 @@ class RestClient(
 
         private val formData = LinkedMultiValueMap<String, String>()
 
-        /*private var resourceId: String? = null
-
-        private var resourceUrl: String? = null
-
-        private var resourceName: String? = null
-
-        private var resourceVersion: String? = null
-
-        private var subject: String? = null
-
-        private var patient: String? = null
-
-        private var codes: Iterable<Coding>? = null
-
-        private var medicationCodes: Iterable<Coding>? = null
-
-        private var valueSet: String? = null*/
-
         override fun setTokenType(tokenType: String) {
             this.tokenType = tokenType
         }
@@ -153,13 +135,11 @@ class RestClient(
 
         override fun withId(resourceId: String): SearchInternal {
             this.formData["_id"] = resourceId
-            //this.resourceId = resourceId
             return this
         }
 
         override fun withUrl(resourceUrl: String): ISearch {
             this.formData["url"] = resourceUrl
-            //this.resourceUrl = resourceUrl
             return this
         }
 
@@ -170,25 +150,21 @@ class RestClient(
 
         override fun withName(resourceName: String): SearchInternal {
             this.formData["name"] = resourceName
-            //this.resourceName = resourceName
             return this
         }
 
         override fun withVersion(resourceVersion: String): SearchInternal {
             this.formData["version"] = resourceVersion
-            //this.resourceVersion = resourceVersion
             return this
         }
 
         override fun withSubject(subject: String): ISearch {
             this.formData["subject"] = subject
-            //this.subject = subject
             return this
         }
 
         override fun withPatient(patient: String): ISearch {
             this.formData["patient"] = patient
-            //this.patient = patient
             return this
         }
 
@@ -201,13 +177,16 @@ class RestClient(
                     "${code.code?.value}"
                 }
             }
-            //this.codes = codes
             return this
         }
 
         override fun withValueSet(codePath: String, valueSet: String): ISearch {
             formData["$codePath:in"] = valueSet
-            //this.valueSet = valueSet
+            return this
+        }
+
+        override fun withContext(contextPath: String, context: String): ISearch {
+            formData[contextPath] = context
             return this
         }
 
